@@ -19,7 +19,8 @@
 # Fortran module files
 *.mod
 *.smod
-
+*.pbd
+*.metagen
 # Compiled Static libraries
 *.lai
 *.la

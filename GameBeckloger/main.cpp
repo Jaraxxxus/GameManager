@@ -1,3 +1,5 @@
+#pragma once
+
 #include "MyForm.h"
 #include <windows.h>
 #include <ShellAPI.h>

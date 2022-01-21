@@ -1,12 +1,14 @@
+#pragma once
 #include "MyForm.h"
 #include <windows.h>
 #include <ShellAPI.h>
 #include <thread>
-
+#include <fstream>
 #include <msclr/marshal.h>
 #include <string>
 #include <vector>
-#include "func.cpp"
+#include "func.h"
+#include "resource.h"
 
 
 
@@ -20,6 +22,62 @@ using  namespace System::Data::OleDb;
 
 
 
+
+String^ GameManager::MyForm::GetLink(String^ DBName, String^ id)
+{
+
+
+
+	String^ url = "";
+	String^ connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source = " + DBName;
+	OleDbConnection^ dbConnection = gcnew OleDbConnection(connectionString);
+
+	//запрос
+	dbConnection->Open();//соединение
+	String^ query = "SELECT URL FROM [MyBD] WHERE ID = " + id;
+	OleDbCommand^ dbComand = gcnew OleDbCommand(query, dbConnection);
+	OleDbDataReader^ dbReader = dbComand->ExecuteReader();//читаю данные
+
+
+	if (dbReader->HasRows == false) {
+		MessageBox::Show("data reading error!", "Error!", MessageBoxButtons::OK, MessageBoxIcon::Error);
+	}
+	else {
+		while (dbReader->Read()) {
+			url = dbReader["URL"]->ToString();
+		}
+
+	}
+	dbReader->Close();
+	dbConnection->Close();
+	return url;
+}
+
+
+
+void GameManager::MyForm::readDB(String^ DBName)
+{
+	String^ connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source = " + DBName;
+	OleDbConnection^ dbConnection = gcnew OleDbConnection(connectionString);
+
+	//запрос
+	dbConnection->Open();//соединение
+	String^ query = "SELECT * FROM [MyBD] ";
+	OleDbCommand^ dbComand = gcnew OleDbCommand(query, dbConnection);
+	OleDbDataReader^ dbReader = dbComand->ExecuteReader();//читаю данные
+
+	if (dbReader->HasRows == false) {
+		MessageBox::Show("data reading error!", "Error!", MessageBoxButtons::OK, MessageBoxIcon::Error);
+	}
+	else {
+
+		while (dbReader->Read()) {
+			dataGridView1->Rows->Add(dbReader["Id"], dbReader["Game"], dbReader["Cost"], dbReader["SteamRate"], dbReader["Metacritic Metascore"], dbReader["Metacritic Userscore"],  dbReader["Length main"], dbReader["Length all"], dbReader["Add Date"], dbReader["Refresh Date"]);
+		}
+	}
+	dbReader->Close();
+	dbConnection->Close();
+}
 
 
 
@@ -61,7 +119,10 @@ System::Void GameManager::MyForm::buttonOpen_Click(System::Object^ sender, Syste
 
 	std::string Murl = ConvertToString(Surl);
 	url.append(Murl);
-	system(url.c_str());
+	if (url.find("store.steampowered.com") !=-1) {
+		system(url.c_str());
+	}
+	else MessageBox::Show("Bad Steam link", "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
 	//ShellExecute(NULL, TEXT("open"), url, NULL, NULL, SW_SHOWNORMAL);
 }
 
@@ -85,6 +146,41 @@ System::Void GameManager::MyForm::MyForm_Load(System::Object^ sender, System::Ev
 }
 
 
+
+
+
+
+System::Void GameManager::MyForm::CreateBD_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	String^ FileName = "";
+	saveFileDialogSearch->Filter = "MDB|*.mdb";
+	if (saveFileDialogSearch->ShowDialog() == Windows::Forms::DialogResult::OK) {
+		FileName = saveFileDialogSearch->FileName;
+		HMODULE handle = GetModuleHandle(NULL);
+		HRSRC rc = FindResource(handle, MAKEINTRESOURCE(BD), MAKEINTRESOURCE(BDfile));
+		HGLOBAL rcData = LoadResource(handle, rc);
+		DWORD size = SizeofResource(handle, rc);
+		const char* data = static_cast<const char*>(LockResource(rcData));
+		std::string result;
+		result.assign(data, size);
+		std::ofstream out(ConvertToString(FileName)); //output file
+		if (out.is_open())
+		{
+			
+			
+		
+				out << result;
+
+			
+		}
+
+
+	}
+
+
+	
+
+}
 
 
 

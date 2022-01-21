@@ -52,11 +52,13 @@ namespace GameManager {
 
 	private: System::ComponentModel::BackgroundWorker^ backgroundWorker1;
 	private: System::Windows::Forms::GroupBox^ groupBox1;
-	private: System::Windows::Forms::Button^ button5;
+	private: System::Windows::Forms::Button^ buttonrefresh;
+
 
 	private: System::Windows::Forms::Button^ buttonOpen;
 	private: System::Windows::Forms::Button^ buttondell;
-	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::Button^ buttonAdd;
+
 	private: System::Windows::Forms::MenuStrip^ menuStrip1;
 	private: System::Windows::Forms::ToolStripMenuItem^ infoToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ ChoseBD;
@@ -67,25 +69,71 @@ namespace GameManager {
 
 
 
+		 
 
 
 
 
 
 	private: System::Windows::Forms::OpenFileDialog^ openFileDialogSearch;
-	private: System::Windows::Forms::DataGridViewCheckBoxColumn^ Выбрать;
+	private: System::Windows::Forms::SaveFileDialog^ saveFileDialogSearch;
+	private: System::Windows::Forms::ToolStripMenuItem^ CreateBD;
+
+
+
+
+
+
+
+
+
+
+
+
+
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Id;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Game;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Cost;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ SteamRate;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Metacritic_Metascore;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Metacritic_UsersCore;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Hl2b_rate;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Hl2b_main;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Hl2b_all;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Add_Date;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Refresh_Date;
-	private: System::Windows::Forms::ToolStripMenuItem^ CreateToolStripMenuItem;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -115,29 +163,28 @@ namespace GameManager {
 		void InitializeComponent(void)
 		{
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
-			this->Выбрать = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
+			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->buttonrefresh = (gcnew System::Windows::Forms::Button());
+			this->buttonOpen = (gcnew System::Windows::Forms::Button());
+			this->buttondell = (gcnew System::Windows::Forms::Button());
+			this->buttonAdd = (gcnew System::Windows::Forms::Button());
+			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
+			this->infoToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ChoseBD = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->CreateBD = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->openFileDialogSearch = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->saveFileDialogSearch = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->Id = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Game = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Cost = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SteamRate = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Metacritic_Metascore = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Metacritic_UsersCore = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Hl2b_rate = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Hl2b_main = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Hl2b_all = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Add_Date = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Refresh_Date = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
-			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->button5 = (gcnew System::Windows::Forms::Button());
-			this->buttonOpen = (gcnew System::Windows::Forms::Button());
-			this->buttondell = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
-			this->infoToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->ChoseBD = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->CreateToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->openFileDialogSearch = (gcnew System::Windows::Forms::OpenFileDialog());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->menuStrip1->SuspendLayout();
@@ -147,91 +194,16 @@ namespace GameManager {
 			// 
 			this->dataGridView1->AllowUserToOrderColumns = true;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(12) {
-				this->Выбрать,
-					this->Id, this->Game, this->Cost, this->SteamRate, this->Metacritic_Metascore, this->Metacritic_UsersCore, this->Hl2b_rate, this->Hl2b_main,
-					this->Hl2b_all, this->Add_Date, this->Refresh_Date
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(10) {
+				this->Id, this->Game,
+					this->Cost, this->SteamRate, this->Metacritic_Metascore, this->Metacritic_UsersCore, this->Hl2b_main, this->Hl2b_all, this->Add_Date,
+					this->Refresh_Date
 			});
 			this->dataGridView1->Location = System::Drawing::Point(6, 55);
 			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->Size = System::Drawing::Size(1160, 364);
+			this->dataGridView1->Size = System::Drawing::Size(1138, 364);
 			this->dataGridView1->TabIndex = 0;
 			this->dataGridView1->CellContentClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MyForm::dataGridView1_CellContentClick);
-			// 
-			// Выбрать
-			// 
-			this->Выбрать->Frozen = true;
-			this->Выбрать->HeaderText = L"Chose";
-			this->Выбрать->Name = L"Выбрать";
-			this->Выбрать->Resizable = System::Windows::Forms::DataGridViewTriState::False;
-			this->Выбрать->Width = 40;
-			// 
-			// Id
-			// 
-			this->Id->Frozen = true;
-			this->Id->HeaderText = L"Номер";
-			this->Id->Name = L"Id";
-			this->Id->ReadOnly = true;
-			// 
-			// Game
-			// 
-			this->Game->Frozen = true;
-			this->Game->HeaderText = L"Игра";
-			this->Game->Name = L"Game";
-			// 
-			// Cost
-			// 
-			this->Cost->Frozen = true;
-			this->Cost->HeaderText = L"Цена";
-			this->Cost->Name = L"Cost";
-			// 
-			// SteamRate
-			// 
-			this->SteamRate->Frozen = true;
-			this->SteamRate->HeaderText = L"Рейтинг в стим";
-			this->SteamRate->Name = L"SteamRate";
-			// 
-			// Metacritic_Metascore
-			// 
-			this->Metacritic_Metascore->Frozen = true;
-			this->Metacritic_Metascore->HeaderText = L"Оценка Критиков";
-			this->Metacritic_Metascore->Name = L"Metacritic_Metascore";
-			// 
-			// Metacritic_UsersCore
-			// 
-			this->Metacritic_UsersCore->Frozen = true;
-			this->Metacritic_UsersCore->HeaderText = L"Оценка пользователей";
-			this->Metacritic_UsersCore->Name = L"Metacritic_UsersCore";
-			// 
-			// Hl2b_rate
-			// 
-			this->Hl2b_rate->Frozen = true;
-			this->Hl2b_rate->HeaderText = L"Hl2B оценка";
-			this->Hl2b_rate->Name = L"Hl2b_rate";
-			// 
-			// Hl2b_main
-			// 
-			this->Hl2b_main->Frozen = true;
-			this->Hl2b_main->HeaderText = L"Длительность";
-			this->Hl2b_main->Name = L"Hl2b_main";
-			// 
-			// Hl2b_all
-			// 
-			this->Hl2b_all->Frozen = true;
-			this->Hl2b_all->HeaderText = L"Длительность (Полное прохождение)";
-			this->Hl2b_all->Name = L"Hl2b_all";
-			// 
-			// Add_Date
-			// 
-			this->Add_Date->Frozen = true;
-			this->Add_Date->HeaderText = L"Дата";
-			this->Add_Date->Name = L"Add_Date";
-			// 
-			// Refresh_Date
-			// 
-			this->Refresh_Date->Frozen = true;
-			this->Refresh_Date->HeaderText = L"Обновлено";
-			this->Refresh_Date->Name = L"Refresh_Date";
 			// 
 			// backgroundWorker1
 			// 
@@ -239,26 +211,27 @@ namespace GameManager {
 			// 
 			// groupBox1
 			// 
-			this->groupBox1->Controls->Add(this->button5);
+			this->groupBox1->Controls->Add(this->buttonrefresh);
 			this->groupBox1->Controls->Add(this->buttonOpen);
 			this->groupBox1->Controls->Add(this->buttondell);
-			this->groupBox1->Controls->Add(this->button1);
+			this->groupBox1->Controls->Add(this->buttonAdd);
 			this->groupBox1->Location = System::Drawing::Point(12, 425);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(1154, 71);
+			this->groupBox1->Size = System::Drawing::Size(1132, 71);
 			this->groupBox1->TabIndex = 1;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Действия";
 			this->groupBox1->Enter += gcnew System::EventHandler(this, &MyForm::groupBox1_Enter);
 			// 
-			// button5
+			// buttonrefresh
 			// 
-			this->button5->Location = System::Drawing::Point(992, 19);
-			this->button5->Name = L"button5";
-			this->button5->Size = System::Drawing::Size(156, 46);
-			this->button5->TabIndex = 4;
-			this->button5->Text = L"Обновить";
-			this->button5->UseVisualStyleBackColor = true;
+			this->buttonrefresh->Location = System::Drawing::Point(970, 19);
+			this->buttonrefresh->Name = L"buttonrefresh";
+			this->buttonrefresh->Size = System::Drawing::Size(156, 46);
+			this->buttonrefresh->TabIndex = 4;
+			this->buttonrefresh->Text = L"Обновить";
+			this->buttonrefresh->UseVisualStyleBackColor = true;
+			//this->buttonrefresh->Click += gcnew System::EventHandler(this, &MyForm::button5_Click);
 			// 
 			// buttonOpen
 			// 
@@ -280,21 +253,21 @@ namespace GameManager {
 			this->buttondell->UseVisualStyleBackColor = true;
 			this->buttondell->Click += gcnew System::EventHandler(this, &MyForm::buttondell_Click);
 			// 
-			// button1
+			// buttonAdd
 			// 
-			this->button1->Location = System::Drawing::Point(6, 19);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(156, 46);
-			this->button1->TabIndex = 0;
-			this->button1->Text = L"Добавить";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
+			this->buttonAdd->Location = System::Drawing::Point(6, 19);
+			this->buttonAdd->Name = L"buttonAdd";
+			this->buttonAdd->Size = System::Drawing::Size(156, 46);
+			this->buttonAdd->TabIndex = 0;
+			this->buttonAdd->Text = L"Добавить";
+			this->buttonAdd->UseVisualStyleBackColor = true;
+			this->buttonAdd->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
 			// menuStrip1
 			// 
 			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
 				this->infoToolStripMenuItem,
-					this->ChoseBD, this->CreateToolStripMenuItem
+					this->ChoseBD, this->CreateBD
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
@@ -320,19 +293,77 @@ namespace GameManager {
 			this->ChoseBD->Text = L"Выбрать БД";
 			this->ChoseBD->Click += gcnew System::EventHandler(this, &MyForm::ToolStripMenuItem_Click);
 			// 
-			// CreateToolStripMenuItem
+			// CreateBD
 			// 
-			this->CreateToolStripMenuItem->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->CreateBD->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->CreateToolStripMenuItem->Name = L"CreateToolStripMenuItem";
-			this->CreateToolStripMenuItem->Size = System::Drawing::Size(112, 27);
-			this->CreateToolStripMenuItem->Text = L"Создать БД";
-			//this->CreateToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::CreateBDToolStripMenuItem_Click);
+			this->CreateBD->Name = L"CreateBD";
+			this->CreateBD->Size = System::Drawing::Size(112, 27);
+			this->CreateBD->Text = L"Создать БД";
+			this->CreateBD->Click += gcnew System::EventHandler(this, &MyForm::CreateBD_Click);
 			// 
 			// openFileDialogSearch
 			// 
 			this->openFileDialogSearch->FileName = L"openFileDialogSerch";
 			this->openFileDialogSearch->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &MyForm::openFileDialogSearch_FileOk);
+			// 
+			// Id
+			// 
+			this->Id->HeaderText = L"Номер";
+			this->Id->Name = L"Id";
+			this->Id->ReadOnly = true;
+			this->Id->Resizable = System::Windows::Forms::DataGridViewTriState::False;
+			// 
+			// Game
+			// 
+			this->Game->HeaderText = L"Игра";
+			this->Game->Name = L"Game";
+			this->Game->Width = 120;
+			// 
+			// Cost
+			// 
+			this->Cost->HeaderText = L"Цена";
+			this->Cost->Name = L"Cost";
+			this->Cost->Width = 120;
+			// 
+			// SteamRate
+			// 
+			this->SteamRate->HeaderText = L"Рейтинг в стим";
+			this->SteamRate->Name = L"SteamRate";
+			// 
+			// Metacritic_Metascore
+			// 
+			this->Metacritic_Metascore->HeaderText = L"Оценка Критиков";
+			this->Metacritic_Metascore->Name = L"Metacritic_Metascore";
+			// 
+			// Metacritic_UsersCore
+			// 
+			this->Metacritic_UsersCore->HeaderText = L"Оценка пользователей";
+			this->Metacritic_UsersCore->Name = L"Metacritic_UsersCore";
+			// 
+			// Hl2b_main
+			// 
+			this->Hl2b_main->HeaderText = L"Длительность";
+			this->Hl2b_main->Name = L"Hl2b_main";
+			this->Hl2b_main->Width = 120;
+			// 
+			// Hl2b_all
+			// 
+			this->Hl2b_all->HeaderText = L"Длительность (Полное прохождение)";
+			this->Hl2b_all->Name = L"Hl2b_all";
+			this->Hl2b_all->Width = 120;
+			// 
+			// Add_Date
+			// 
+			this->Add_Date->HeaderText = L"Дата";
+			this->Add_Date->Name = L"Add_Date";
+			this->Add_Date->Width = 110;
+			// 
+			// Refresh_Date
+			// 
+			this->Refresh_Date->HeaderText = L"Обновлено";
+			this->Refresh_Date->Name = L"Refresh_Date";
+			this->Refresh_Date->Width = 110;
 			// 
 			// MyForm
 			// 
@@ -343,6 +374,9 @@ namespace GameManager {
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->menuStrip1);
 			this->MainMenuStrip = this->menuStrip1;
+			this->MaximizeBox = false;
+			this->MaximumSize = System::Drawing::Size(1194, 540);
+			this->MinimumSize = System::Drawing::Size(1194, 540);
 			this->Name = L"MyForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Game Backloger";
@@ -369,6 +403,7 @@ namespace GameManager {
 	private: System::Void infoToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {};
 	private: System::Void openFileDialogSearch_FileOk(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {};
 	private: String^ GetLink(String^ DBName, String^ id);
-	//private: System::Void CreateBDToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
-	};
+	
+private: System::Void CreateBD_Click(System::Object^ sender, System::EventArgs^ e);
+};
 }

@@ -30,3 +30,11 @@ System::String^ ConvertToString(std::string& os) {
 	return s;
 }
 
+System::String^ plusOne(System::String^ s) {
+	std::string str = ConvertToString(s);
+	int in = stoi(str);
+	in++;
+	str = std::to_string(in);
+	s = ConvertToString(str);
+	return s;
+}

@@ -9,13 +9,13 @@
 #include <vector>
 #include "func.h"
 #include "resource.h"
-
+#include "parser.h"
+#include "addtoDB.h"
 
 
 using  namespace System;
 using  namespace System::Windows::Forms;
 using  namespace System::Data::OleDb;
-
 //Ws2_32.lib
 //Crypt32.lib
 //Wldap32.lib; Normaliz.lib;
@@ -72,7 +72,7 @@ void GameManager::MyForm::readDB(String^ DBName)
 	else {
 
 		while (dbReader->Read()) {
-			dataGridView1->Rows->Add(dbReader["Id"], dbReader["Game"], dbReader["Cost"], dbReader["SteamRate"], dbReader["Metacritic Metascore"], dbReader["Metacritic Userscore"],  dbReader["Length main"], dbReader["Length all"], dbReader["Add Date"], dbReader["Refresh Date"]);
+			dataGridView1->Rows->Add(dbReader["Id"], dbReader["Game"], dbReader["Cost"], dbReader["SteamRate"], dbReader["Metacritic Metascore"], dbReader["Metacritic Userscore"],  dbReader["Length main"], dbReader["Length all"]);
 		}
 	}
 	dbReader->Close();
@@ -92,6 +92,25 @@ System::Void GameManager::MyForm::button1_Click(System::Object^ sender, System::
 
 }
 
+
+System::Void GameManager::MyForm::buttonAdd_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	String^ link = textBox1->Text;
+	std::string strlink = ConvertToString(link);
+	if (strlink.find("https://store.steampowered.com/app/") == -1)
+		MessageBox::Show("Невалидная ссылка Steam!", "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
+	else {
+		vector<string> parseres = parseall(strlink);
+		if (parseres[0] == "-1")
+			MessageBox::Show("Невалидная ссылка Steam, залогиньтесь в Steam в браузере по умолчанию и повторите попытку", "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		else if (addtoDB(parseres, strlink, ConvertToString(curDB))) MessageBox::Show("Что то пошло не так!", "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		
+		else MessageBox::Show("Добавлено", "Готово!", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		
+		
+
+	}
+}
 
 System::Void GameManager::MyForm::buttonOpen_Click(System::Object^ sender, System::EventArgs^ e)
 {
@@ -134,6 +153,7 @@ System::Void GameManager::MyForm::ToolStripMenuItem_Click(System::Object^ sender
 		FileName = openFileDialogSearch->FileName;
 		dataGridView1->Rows->Clear();
 		readDB(FileName);
+		curDB = FileName;
 	}
 
 
@@ -142,7 +162,7 @@ System::Void GameManager::MyForm::ToolStripMenuItem_Click(System::Object^ sender
 System::Void GameManager::MyForm::MyForm_Load(System::Object^ sender, System::EventArgs^ e)
 {
 	readDB("myDB.mdb");
-
+	curDB = "myDB.mdb";
 }
 
 
@@ -166,21 +186,12 @@ System::Void GameManager::MyForm::CreateBD_Click(System::Object^ sender, System:
 		std::ofstream out(ConvertToString(FileName)); //output file
 		if (out.is_open())
 		{
-			
-			
-		
-				out << result;
-
-			
+				out << result;	
 		}
-
-
 	}
-
-
-	
-
 }
+
+
 
 
 

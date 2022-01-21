@@ -4,3 +4,4 @@
 
 std::string ConvertToString(System::String^ s);
 System::String^ ConvertToString(std::string& os);
+System::String^ plusOne(System::String^ s);

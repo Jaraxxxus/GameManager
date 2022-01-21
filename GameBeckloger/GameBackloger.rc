@@ -1,0 +1,2 @@
+#include "resource.h"
+BD BDfile "Res\\db.mdb"

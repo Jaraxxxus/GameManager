@@ -1,5 +1,5 @@
 #define CURL_STATICLIB
-
+//врн рн ме рн я жемюлх
 #include <iostream>
 #include<curl\curl.h>
 #include<vector>
@@ -14,28 +14,34 @@ using namespace std;
 string find_Steam_price(string page) {
 	int start;
 	int finish;
-
-	start = page.find("game_purchase_price price");
-	finish = page.find("div class=\"btn_addtocart\">");
 	string res;
 
-	if (start == -1) {
-		start = page.find("discount_original_price");
-		if (start == -1) return "no data";
+
+	start = page.find("game_purchase_action_bg");
+	page = page.substr(start);
+
+	start = page.find("discount_original_price");
+	if (start != -1) {
 		finish = page.find("discount_final_price", start);
-		res = page.substr(start + 26, finish - start - 61);
+		res = page.substr(start + 25, finish - start - 50);
 		return res;
 	}
+
+	start = page.find("game_purchase_price price");
+	finish = page.find("div class=\"btn_addtocart\">", start);
+
+
+
 	if (start != -1 && finish != -1) {
 		res = page.substr(start, finish - start);
 		start = 0;
-
-		finish = res.find("\"");
-		res = res.substr(start + 61, finish - 21);
+		finish = res.find(">");
+		res = res.substr(45, finish - 48);
 	}
 	else res = "0";
 	return res;
 }
+
 
 string find_Steam_rate(string page) {
 	int start;
@@ -66,6 +72,14 @@ string find_Steam_name(string page) {
 	return res;
 
 };
+
+
+size_t write_data(void* ptr, size_t size, size_t nmemb, FILE* stream) {
+	size_t written = fwrite(ptr, size, nmemb, stream);
+	return written;
+}
+
+
 
 static size_t getResponsetoString(void* contents, size_t size, size_t nmemb, void* userp) {
 
@@ -276,7 +290,14 @@ string GetHl2b(string source) {
 }
 
 vector<string> parseall(std::string source) {
+	auto checkstr = source;
 	vector<string> parseresult;
+	reverse(checkstr.begin(), checkstr.end());
+	if (checkstr.find("/") != 0) {
+		parseresult.push_back("-2");
+		return parseresult;
+	}
+	
 	string page = downloadHTML(source);
 	parseresult.push_back(find_Steam_name(page));
 	//cout << "aa";
@@ -295,3 +316,24 @@ vector<string> parseall(std::string source) {
 }
 
 
+
+void DownloadBD(string path) {
+	CURL* curl;
+	FILE* fp;
+	CURLcode res;
+	char* url = "https://github.com/Jaraxxxus/GameManager/raw/main/myDB.mdb";
+	char outfilename[FILENAME_MAX]="";
+	strcat(outfilename, path.c_str());
+	curl = curl_easy_init();
+	if (curl) {
+		fp = fopen(outfilename, "wb");
+		curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+		res = curl_easy_perform(curl);
+		/* always cleanup */
+		curl_easy_cleanup(curl);
+		fclose(fp);
+	}
+
+}

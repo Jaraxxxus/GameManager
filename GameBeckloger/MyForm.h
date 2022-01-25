@@ -56,47 +56,20 @@ namespace GameManager {
 
 
 	private: System::Windows::Forms::Button^ buttonOpen;
-	private: System::Windows::Forms::Button^ buttondell;
+	private: System::Windows::Forms::Button^ buttonDell;
 
 
 	private: System::Windows::Forms::MenuStrip^ menuStrip1;
 	private: System::Windows::Forms::ToolStripMenuItem^ infoToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ ChoseBD;
 	public: String^ curDB;
-
-
-
-
-
-
-		 
-
-
+	public: bool isOpen;
 
 
 
 	private: System::Windows::Forms::OpenFileDialog^ openFileDialogSearch;
 	private: System::Windows::Forms::SaveFileDialog^ saveFileDialogSearch;
 	private: System::Windows::Forms::ToolStripMenuItem^ CreateBD;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -112,32 +85,8 @@ namespace GameManager {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Metacritic_UsersCore;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Hl2b_main;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Hl2b_all;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Add;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Update;
 
 
 
@@ -181,7 +130,7 @@ namespace GameManager {
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->buttonrefresh = (gcnew System::Windows::Forms::Button());
 			this->buttonOpen = (gcnew System::Windows::Forms::Button());
-			this->buttondell = (gcnew System::Windows::Forms::Button());
+			this->buttonDell = (gcnew System::Windows::Forms::Button());
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->infoToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ChoseBD = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -196,6 +145,8 @@ namespace GameManager {
 			this->Metacritic_UsersCore = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Hl2b_main = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Hl2b_all = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Add = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Update = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->menuStrip1->SuspendLayout();
@@ -205,11 +156,12 @@ namespace GameManager {
 			// 
 			this->dataGridView1->AllowUserToOrderColumns = true;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(10) {
 				this->Id, this->Game,
-					this->Cost, this->SteamRate, this->Metacritic_Metascore, this->Metacritic_UsersCore, this->Hl2b_main, this->Hl2b_all
+					this->Cost, this->SteamRate, this->Metacritic_Metascore, this->Metacritic_UsersCore, this->Hl2b_main, this->Hl2b_all, this->Add,
+					this->Update
 			});
-			this->dataGridView1->Location = System::Drawing::Point(6, 55);
+			this->dataGridView1->Location = System::Drawing::Point(12, 55);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->Size = System::Drawing::Size(1138, 364);
 			this->dataGridView1->TabIndex = 0;
@@ -226,7 +178,7 @@ namespace GameManager {
 			this->groupBox1->Controls->Add(this->textBox1);
 			this->groupBox1->Controls->Add(this->buttonrefresh);
 			this->groupBox1->Controls->Add(this->buttonOpen);
-			this->groupBox1->Controls->Add(this->buttondell);
+			this->groupBox1->Controls->Add(this->buttonDell);
 			this->groupBox1->Location = System::Drawing::Point(12, 425);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(1132, 71);
@@ -276,6 +228,7 @@ namespace GameManager {
 			this->buttonrefresh->TabIndex = 4;
 			this->buttonrefresh->Text = L"Обновить";
 			this->buttonrefresh->UseVisualStyleBackColor = true;
+			this->buttonrefresh->Click += gcnew System::EventHandler(this, &MyForm::buttonrefresh_Click);
 			// 
 			// buttonOpen
 			// 
@@ -287,15 +240,15 @@ namespace GameManager {
 			this->buttonOpen->UseVisualStyleBackColor = true;
 			this->buttonOpen->Click += gcnew System::EventHandler(this, &MyForm::buttonOpen_Click);
 			// 
-			// buttondell
+			// buttonDell
 			// 
-			this->buttondell->Location = System::Drawing::Point(168, 19);
-			this->buttondell->Name = L"buttondell";
-			this->buttondell->Size = System::Drawing::Size(156, 46);
-			this->buttondell->TabIndex = 1;
-			this->buttondell->Text = L"Удалить";
-			this->buttondell->UseVisualStyleBackColor = true;
-			this->buttondell->Click += gcnew System::EventHandler(this, &MyForm::buttondell_Click);
+			this->buttonDell->Location = System::Drawing::Point(168, 19);
+			this->buttonDell->Name = L"buttonDell";
+			this->buttonDell->Size = System::Drawing::Size(156, 46);
+			this->buttonDell->TabIndex = 1;
+			this->buttonDell->Text = L"Удалить";
+			this->buttonDell->UseVisualStyleBackColor = true;
+			this->buttonDell->Click += gcnew System::EventHandler(this, &MyForm::buttonDell_Click);
 			// 
 			// menuStrip1
 			// 
@@ -347,49 +300,70 @@ namespace GameManager {
 			this->Id->Name = L"Id";
 			this->Id->ReadOnly = true;
 			this->Id->Resizable = System::Windows::Forms::DataGridViewTriState::False;
+			this->Id->Width = 70;
 			// 
 			// Game
 			// 
 			this->Game->HeaderText = L"Игра";
 			this->Game->Name = L"Game";
+			this->Game->ReadOnly = true;
 			this->Game->Width = 120;
 			// 
 			// Cost
 			// 
 			this->Cost->HeaderText = L"Цена";
 			this->Cost->Name = L"Cost";
-			this->Cost->Width = 120;
+			this->Cost->ReadOnly = true;
+			this->Cost->Width = 80;
 			// 
 			// SteamRate
 			// 
 			this->SteamRate->HeaderText = L"Рейтинг в стим";
 			this->SteamRate->Name = L"SteamRate";
-			this->SteamRate->Width = 170;
+			this->SteamRate->ReadOnly = true;
 			// 
 			// Metacritic_Metascore
 			// 
 			this->Metacritic_Metascore->FillWeight = 150;
 			this->Metacritic_Metascore->HeaderText = L"Оценка Критиков";
 			this->Metacritic_Metascore->Name = L"Metacritic_Metascore";
-			this->Metacritic_Metascore->Width = 170;
+			this->Metacritic_Metascore->ReadOnly = true;
+			this->Metacritic_Metascore->Width = 120;
 			// 
 			// Metacritic_UsersCore
 			// 
 			this->Metacritic_UsersCore->HeaderText = L"Оценка пользователей";
 			this->Metacritic_UsersCore->Name = L"Metacritic_UsersCore";
-			this->Metacritic_UsersCore->Width = 170;
+			this->Metacritic_UsersCore->ReadOnly = true;
+			this->Metacritic_UsersCore->Width = 120;
 			// 
 			// Hl2b_main
 			// 
 			this->Hl2b_main->HeaderText = L"Длительность";
 			this->Hl2b_main->Name = L"Hl2b_main";
+			this->Hl2b_main->ReadOnly = true;
 			this->Hl2b_main->Width = 120;
 			// 
 			// Hl2b_all
 			// 
 			this->Hl2b_all->HeaderText = L"Длительность (Полное прохождение)";
 			this->Hl2b_all->Name = L"Hl2b_all";
+			this->Hl2b_all->ReadOnly = true;
 			this->Hl2b_all->Width = 130;
+			// 
+			// Add
+			// 
+			this->Add->HeaderText = L"Добавленно";
+			this->Add->Name = L"Add";
+			this->Add->ReadOnly = true;
+			this->Add->Width = 120;
+			// 
+			// Update
+			// 
+			this->Update->HeaderText = L"Обновленно";
+			this->Update->Name = L"Update";
+			this->Update->ReadOnly = true;
+			this->Update->Width = 120;
 			// 
 			// MyForm
 			// 
@@ -422,7 +396,7 @@ namespace GameManager {
 
 	private: System::Void groupBox1_Enter(System::Object^ sender, System::EventArgs^ e) {};
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
-	private: System::Void buttondell_Click(System::Object^ sender, System::EventArgs^ e) {};
+	private: System::Void buttonDell_Click(System::Object^ sender, System::EventArgs^ e);
     private: System::Void buttonAdd_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void buttonOpen_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void ToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
@@ -430,10 +404,11 @@ namespace GameManager {
 	private: void readDB(String^ DBName);
 	private: System::Void infoToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {};
 	private: System::Void openFileDialogSearch_FileOk(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {};
-	private: String^ GetLink(String^ DBName, String^ id);
+	private:  String^ GetLink(String^ DBName, String^ id);
 	
 private: System::Void CreateBD_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void textBox1_TextChanged(System::Object^ sender, System::EventArgs^ e) {}
 
+private: System::Void buttonrefresh_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

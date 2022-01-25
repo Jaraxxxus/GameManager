@@ -227,6 +227,7 @@ vector<string> parsecubiq(string source)
 	string link = GetqubicLink(source);
 	string page = downloadHTML(link);
 	int start;
+	int finish;
 	vector<string> ans;
 	//cout << page;
 	start = page.find("<meta name=\"description\" content=\"");
@@ -238,13 +239,18 @@ vector<string> parsecubiq(string source)
 	string partansw = page.substr(start);
 	start = partansw.find(".");
 	partansw = partansw.substr(start);
-	string length1 = partansw.substr(51, 2);
+	finish = partansw.find("З");
+	//часов может быть больше 2х
+	string length1 = partansw.substr(51, finish - 53);
 	length1.append(" h. ");
-	length1.append(partansw.substr(58, 2));
+	length1.append(partansw.substr(finish + 3, 2));
 	length1.append(" min. ");
-	string length2 = partansw.substr(128, 2);
+	start = partansw.find("∞", 112);
+	partansw = partansw.substr(start + 1);
+	finish = partansw.find("З");
+	string length2 = partansw.substr(0, finish-2);
 	length2.append(" h. ");
-	length2.append(partansw.substr(135, 2));
+	length2.append(partansw.substr(finish + 3, 2));
 	length2.append(" min. ");
 	ans.push_back(length1);
 	ans.push_back(length2);
@@ -252,6 +258,7 @@ vector<string> parsecubiq(string source)
 	return ans;
 
 }
+
 
 
 string GetHl2b(string source) {
@@ -314,6 +321,9 @@ vector<string> parseall(std::string source) {
 	parseresult.push_back(sabvect[1]);
 	return parseresult;
 }
+
+
+
 
 
 

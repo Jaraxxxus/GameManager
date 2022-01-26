@@ -52,8 +52,16 @@ string find_Steam_rate(string page) {
 	if (start != -1 || finish != -1) {
 		res = page.substr(start + 7, finish - start - 7);
 	}
+
+
+	if (start != -1 && finish == -1) {
+		if (res.find("No user reviews") != -1)
+			res = "No user reviews";
+	}
+	cout << res << endl;
 	return res;
 };
+
 string find_Steam_name(string page) {
 
 	int start;

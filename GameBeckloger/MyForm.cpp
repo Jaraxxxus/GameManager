@@ -93,7 +93,7 @@ System::Void GameManager::MyForm::button1_Click(System::Object^ sender, System::
 System::Void GameManager::MyForm::buttonDell_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	int selectedRowIndex = -1;
-	if (dataGridView1->SelectedRows->Count == 0 && dataGridView1->SelectedCells->Count > 0) {
+	if (dataGridView1->SelectedRows->Count == 0 && dataGridView1->SelectedCells->Count == 1) {
 		selectedRowIndex = dataGridView1->SelectedCells[0]->RowIndex;
 	}
 	else if (dataGridView1->SelectedRows->Count != 1) {
@@ -186,7 +186,7 @@ System::Void GameManager::MyForm::buttonOpen_Click(System::Object^ sender, Syste
 		return;
 	}
 	int selectedrowindex = -1;
-	if (dataGridView1->SelectedRows->Count == 0 && dataGridView1->SelectedCells->Count > 0) {
+	if (dataGridView1->SelectedRows->Count == 0 && dataGridView1->SelectedCells->Count == 1) {
 		 selectedrowindex = dataGridView1->SelectedCells[0]->RowIndex;
 	}else if (dataGridView1->SelectedRows->Count != 1) {
 		MessageBox::Show("выберите одну строку!", "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);

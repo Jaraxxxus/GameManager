@@ -393,9 +393,7 @@ namespace GameManager {
 #pragma endregion
 	private: System::Void dataGridView1_CellContentClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {};
 	private: System::Void backgroundWorker1_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) {};
-
 	private: System::Void groupBox1_Enter(System::Object^ sender, System::EventArgs^ e) {};
-	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void buttonDell_Click(System::Object^ sender, System::EventArgs^ e);
     private: System::Void buttonAdd_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void buttonOpen_Click(System::Object^ sender, System::EventArgs^ e);

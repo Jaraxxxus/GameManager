@@ -85,10 +85,7 @@ void GameManager::MyForm::readDB(String^ DBName)
 
 
 
-System::Void GameManager::MyForm::button1_Click(System::Object^ sender, System::EventArgs^ e)
-{
 
-}
 
 System::Void GameManager::MyForm::buttonDell_Click(System::Object^ sender, System::EventArgs^ e)
 {
@@ -112,23 +109,14 @@ System::Void GameManager::MyForm::buttonDell_Click(System::Object^ sender, Syste
 	
 	String^ id = dataGridView1->Rows[selectedRowIndex]->Cells[0]->Value->ToString();
 
-	
-	String^ connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source="+ curDB;
-	OleDbConnection^ dbConnection = gcnew OleDbConnection(connectionString);
 
-	
-	dbConnection->Open();
-	String^ query = "DELETE FROM [MyBD] WHERE ID = " + id;
-	OleDbCommand^ dbComand = gcnew OleDbCommand(query, dbConnection);
-
-	if (dbComand->ExecuteNonQuery() != 1)
+	if (deleteFromDB(getDB(),ConvertToString(id)))
 		MessageBox::Show("Что то пошло не так!", "ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
 	else {
 		MessageBox::Show("Строка успешно удалена!", "Готово!", MessageBoxButtons::OK, MessageBoxIcon::Information);
 		dataGridView1->Rows->RemoveAt(selectedRowIndex);
 	}
 
-	dbConnection->Close();
 	return System::Void();
 }
 

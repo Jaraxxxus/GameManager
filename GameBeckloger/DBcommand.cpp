@@ -85,6 +85,63 @@ int updateDB(vector<string> res, string link, string curDB, string ID) {
 	return flag;
 }
 
+bool deleteFromDB(string curDB, string ID) {
+
+	String^ database = ConvertToString(curDB);
+	String^ connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + database;
+	OleDbConnection^ dbConnection = gcnew OleDbConnection(connectionString);
+	bool flag;
+
+	dbConnection->Open();
+	//String^ query = "INSERT INTO [MyBD] (URL, Game, Cost, SteamRate, Metacritic Metascore) VALUES ('" + ConvertToString(link) + "', '" + ConvertToString(res[0]) + "', " + ConvertToString(res[1]) + ", '" + ConvertToString(res[2]) + ", '" + ConvertToString(res[2]) + "')";
+	string time = GetTime();
+	String^ query = "DELETE FROM [MyBD] WHERE ID = " + ConvertToString(ID);
+	OleDbCommand^ dbComand = gcnew OleDbCommand(query, dbConnection);
+
+	//ловить ошибку 
+	if (dbComand->ExecuteNonQuery() != 1)
+		flag = error;
+	else
+		flag = 0;
+
+	dbConnection->Close();
+
+	return flag;
+}
+
+
+
+String^ GetLink(String^ DBName, String^ id)
+{
+
+
+
+	String^ url = "";
+	String^ connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source = " + DBName;
+	OleDbConnection^ dbConnection = gcnew OleDbConnection(connectionString);
+
+	//запрос
+	dbConnection->Open();//соединение
+	String^ query = "SELECT URL FROM [MyBD] WHERE ID = " + id;
+	OleDbCommand^ dbComand = gcnew OleDbCommand(query, dbConnection);
+	OleDbDataReader^ dbReader = dbComand->ExecuteReader();//читаю данные
+
+
+	if (dbReader->HasRows == false) {
+		MessageBox::Show("data reading error!", "Error!", MessageBoxButtons::OK, MessageBoxIcon::Error);
+	}
+	else {
+		while (dbReader->Read()) {
+			url = dbReader["URL"]->ToString();
+		}
+
+	}
+	dbReader->Close();
+	dbConnection->Close();
+	return url;
+}
+
+
 /*String^ GetLink(String^ DBName, String^ id)
 {
 
